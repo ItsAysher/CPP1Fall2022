@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer), typeof(Animator))]
-[RequireComponent (typeof(Shoot))]
+[RequireComponent(typeof(Shoot))]
 public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rb;
@@ -17,6 +17,31 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckRadius = 0.02f;
     public bool isFiring;
+
+    Coroutine jumpForceChange;
+
+    private int _lives = 3;
+
+    public int lives
+    {
+        get { return _lives; }
+        set 
+        {
+            //if (_lives > value)
+            //lost life = respawn
+
+            _lives = value; 
+
+            if (_lives > maxLives)
+                _lives = maxLives;
+
+            // if (_lives < 0) { game over }
+            Debug.Log("Lives are set to: " + lives.ToString() );
+
+        }
+    }
+
+    public int maxLives = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -57,8 +82,8 @@ public class PlayerController : MonoBehaviour
                 anim.SetTrigger("Fire");
             else if (curPlayingClip[0].clip.name == "Fire")
                 rb.velocity = Vector2.zero;
-            else if(curPlayingClip[0].clip.name == "JumpAttack")
-                    rb.gravityScale = 0.5f;
+            else if (curPlayingClip[0].clip.name == "JumpAttack")
+                rb.gravityScale = 0.5f;
             else
             {
                 rb.gravityScale = 1;
@@ -78,8 +103,30 @@ public class PlayerController : MonoBehaviour
 
         //flip sprite
         if (hInput != 0)
-        {
             sr.flipX = (hInput < 0);
-        }
     }
+
+    public void StartJumpForceChange()
+    {
+        if (jumpForceChange == null)
+        {
+            jumpForceChange = StartCoroutine(JumpForceChange());
+        }
+        else
+        {
+            StopCoroutine(jumpForceChange);
+            jumpForceChange = null;
+            jumpForce /= 2;
+        }
+
+        IEnumerator JumpForceChange()
+        {
+            jumpForce *= 2;
+
+            yield return new WaitForSeconds(5.0f);
+
+            jumpForce /= 2;
+            jumpForceChange = null;
+        }
+    } 
 }
