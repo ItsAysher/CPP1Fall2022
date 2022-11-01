@@ -29,16 +29,10 @@ public class Collectible : MonoBehaviour
                     curPlayer.StartJumpForceChange();
                     break;
                 case Collectibles.Score:
+                    curPlayer.score += 10;
                     break;
             }
             Destroy(gameObject);
         }
     }
-    /* Variation: public GameObject CollectiblePrefab;
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.name == "Player")
-            Destroy(gameObject);
-    } */
 }

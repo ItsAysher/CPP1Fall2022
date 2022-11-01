@@ -20,6 +20,20 @@ public class PlayerController : MonoBehaviour
 
     Coroutine jumpForceChange;
 
+    
+
+    private int _score = 0;
+
+    public int score
+    {
+        get { return _score; }
+        set 
+        {                                
+            _score = value;        
+        } 
+    }
+    
+    //lives
     private int _lives = 3;
 
     public int lives
@@ -106,6 +120,8 @@ public class PlayerController : MonoBehaviour
             sr.flipX = (hInput < 0);
     }
 
+
+    //Jump boost
     public void StartJumpForceChange()
     {
         if (jumpForceChange == null)
@@ -128,5 +144,13 @@ public class PlayerController : MonoBehaviour
             jumpForce /= 2;
             jumpForceChange = null;
         }
-    } 
+    }
+    public void LifeUpScore()
+    {
+        if (_score == 100)
+        {
+            lives++;
+            _score = 0;
+        }
+    }
 }
